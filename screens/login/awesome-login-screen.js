@@ -1,22 +1,25 @@
 'use strict';
 
 awesome.requireCSS(`${awesome.path}screens/login/awesome-login-screen.css`);
-awesome.requireScript(`${awesome.path}components/dialog/awesome-dialog.js`);
+awesome.requireScript(`${awesome.path}actions/user/auth.js`);
 awesome.requireScript(`${awesome.path}stores/user/auth.js`);
+awesome.requireScript(`${awesome.path}components/dialog/awesome-dialog.js`);
+
 
 (
     function(){
         let state=null;
+        let dispatcher=awesome.dispatchers.component;
+        const constants = awesome.constants.component;
+        const action = awesome.constants.action;
 
-        const constants = awesome.constants.components;
-        const dispatcher=awesome.dispatchers.component;
         const defaults={
             title:'Login',
-            action:null,
+            login_type:null,
 
             username_id:'awesome-login-screen-username',
             username_placeholder:'username',
-            username_pattern: awesome.constants.components.VALIDATE_USERNAME,
+            username_pattern: constants.VALIDATE_USERNAME,
 
             password_id:'awesome-login-screen-password',
             password_placeholder:'password',
@@ -24,7 +27,16 @@ awesome.requireScript(`${awesome.path}stores/user/auth.js`);
             submit_button_text:'Login'
         };
 
-        function init(){
+        function init(e){
+            if(e && e.detail!==`${awesome.path}stores/user/auth.js`){
+                return;
+            }
+
+            window.off(
+                'awesome-script-loaded',
+                init
+            );
+
             state=awesome.stores.auth.state;
 
             document.registerElement(
@@ -68,7 +80,7 @@ awesome.requireScript(`${awesome.path}stores/user/auth.js`);
 
                 state.on(
                     'change',
-                    this.update
+                    this.update.bind(this)
                 );
 
                 this.addEventListener(
@@ -91,19 +103,21 @@ awesome.requireScript(`${awesome.path}stores/user/auth.js`);
             }
 
             attributeChangedCallback(key,oldValue,newValue){
+                this.querySelector(`#${this.dataset.username_id}`).value='';
                 this.querySelector(`#${this.dataset.password_id}`).value='';
             }
 
-            update(state){
+            update(){
                 if(state.authenticated!==true && state.failedAttempts===0){
                     return;
                 }
 
+                this.querySelector(`#${this.dataset.username_id}`).value='';
                 this.querySelector(`#${this.dataset.password_id}`).value='';
             }
 
             change(e){
-                
+
             }
 
             submit(e){
@@ -112,14 +126,12 @@ awesome.requireScript(`${awesome.path}stores/user/auth.js`);
                 const username=this.querySelector(`#${this.dataset.username_id}`);
                 const password=this.querySelector(`#${this.dataset.password_id}`);
 
-                const message = new Message;
-                message.type = constants.LOGIN_ATTEMPT;
-                message.data.username = username.value;
-                message.data.password = password.value;
-
                 dispatcher.trigger(
-                    shared.actions.LOGIN_REQUEST,
-                    message
+                    action.LOGIN_REQUEST,
+                    {
+                        username:username.value,
+                        password:password.value
+                    }
                 );
             }
         }
@@ -127,12 +139,7 @@ awesome.requireScript(`${awesome.path}stores/user/auth.js`);
         if(!awesome.stores.auth){
             window.on(
                 'awesome-script-loaded',
-                function loadedScript(e){
-                    if(e.detail!==`${awesome.path}stores/user/auth.js`){
-                        return;
-                    }
-                    init();
-                }
+                init
             )
             return;
         }

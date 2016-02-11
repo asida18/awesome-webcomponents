@@ -5,7 +5,30 @@ awesome.requireScript(`${awesome.path}dispatchers/action.js`);
 
 (
     function(){
-        const action=awesome.dispatchers.action.events;
+        let action=null;
+
+        function init(e){
+            if(e && e.detail!==`${awesome.path}dispatchers/action.js`){
+                return;
+            }
+
+            window.off(
+                'awesome-script-loaded',
+                init
+            );
+
+            action=awesome.dispatchers.action.events;
+
+            Object.defineProperty(
+                awesome.dispatchers,
+                'component',
+                {
+                    enumerable:true,
+                    writable:false,
+                    value:new Dispatcher
+                }
+            );
+        }
 
         class Dispatcher{
             constructor(){
@@ -15,21 +38,22 @@ awesome.requireScript(`${awesome.path}dispatchers/action.js`);
                         trigger:{
                             enumarable:false,
                             writable:false,
-                            value:action.trigger(action)
+                            value:action.trigger.bind(action)
                         }
                     }
                 );
             }
         }
 
-        Object.defineProperty(
-            awesome.dispatchers,
-            'component',
-            {
-                enumerable:true,
-                writable:false,
-                value:new Dispatcher
-            }
-        );
+        if(!awesome.dispatchers.action){
+            window.on(
+                'awesome-script-loaded',
+                init
+            )
+            return;
+        }
+
+        init();
+
     }
 )();
