@@ -46,8 +46,9 @@ input[type='color']{
 
 button,
 input[type='submit'],
-input[typoe='reset'],
+input[type='reset'],
 input[type='button']{
+    font-size: 1em
     padding:.5em;
     border-radius:.3em;
     border:none;
@@ -55,6 +56,14 @@ input[type='button']{
     font-size:1.2em;
     background:rgb(230,230,230);
     cursor:pointer;
+}
+
+button:active,
+input[type='submit']:active,
+input[type='reset']:active,
+input[type='button']:active{
+    background:rgb(200,200,200);
+    box-shadow:inset 0 0 .3em rgba(0,0,0,.5)
 }
 
 button:disabled,
