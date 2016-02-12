@@ -5,6 +5,7 @@ awesome.requireCSS(`${awesome.path}components/buttons/awesome-buttonset.css`);
 (
     function(){
         const defaults={
+            index:'',
             count:3,
             'b0':0,
             'b1':1,
@@ -20,7 +21,9 @@ awesome.requireCSS(`${awesome.path}components/buttons/awesome-buttonset.css`);
 
                 for(let i=0; i<count; i++){
                     buttons.push(
-                        `<button>${
+                        `<button
+                            data-index='${i}'
+                        >${
                             this.dataset[
                                 `b${i}`
                             ]
@@ -34,7 +37,17 @@ awesome.requireCSS(`${awesome.path}components/buttons/awesome-buttonset.css`);
             }
 
             attachedCallback(){
+                this.value=this.dataset.index;
+                if(this.value===''){
+                    return;
+                }
 
+                this.querySelector(`[data-index='${this.value}']`).classList.add('active');
+
+                this.addEventListener(
+                    'click',
+                    this.update
+                );
             }
 
             detachedCallback(){
@@ -43,6 +56,23 @@ awesome.requireCSS(`${awesome.path}components/buttons/awesome-buttonset.css`);
 
             attributeChangedCallback(key,oldValue,newValue){
 
+            }
+
+            update(e){
+                this.querySelector('.active').classList.remove('active');
+                e.target.classList.add('active');
+
+                this.value=e.target.dataset.index;
+
+                const change = new Event(
+                    'change',
+                    {
+                        'bubbles':true,
+                        'cancelable':false
+                    }
+                );
+
+                this.dispatchEvent(change);
             }
         }
 
