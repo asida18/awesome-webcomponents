@@ -26,15 +26,14 @@
     "test",
     "tests"
   ],
-  "version": "0.0.3",
-  "_release": "0.0.3",
+  "version": "0.0.6",
+  "_release": "0.0.6",
   "_resolution": {
     "type": "version",
-    "tag": "0.0.3",
-    "commit": "e60ce64fdae506d44f60af61f26e7a9f6e4cc81c"
+    "tag": "0.0.6",
+    "commit": "23c6c0b627e1cd1ac8d145589029de2658bc1afa"
   },
   "_source": "git://github.com/RIAEvangelist/browser-error-classes.git",
-  "_target": "^0.0.3",
-  "_originalSource": "browser-error-classes",
-  "_direct": true
+  "_target": "*",
+  "_originalSource": "browser-error-classes"
 }

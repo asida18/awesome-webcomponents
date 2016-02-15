@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * # Custom Node and Browser Error Classes
+ * # Custom and Explicit Javascript Error Classes
  *
  * ` bower install browser-error-classes `
  *
@@ -39,7 +39,7 @@
         );
 
         for(let i=0; i<errors.length; i++){
-            requireScript(`${path}${errors[i]}.js`);
+            requireScript(`${path}lib/${errors[i]}.js`);
         }
 
         function requireScript(path){
@@ -52,7 +52,6 @@
             script.async=false;
             script.defer=true;
             script.type='text/javascript';
-            script.onload=scriptLoaded.bind(path);
             document.head.appendChild(script);
             return true;
         }
