@@ -8,7 +8,8 @@ awesome.requireCSS(`${awesome.path}components/range/awesome-range.css`);
             min: 0,
             max: 0,
             step: 0,
-            value: 0
+            value: 0,
+            disabled: false
         }
 
         class Component extends HTMLElement{
@@ -22,8 +23,19 @@ awesome.requireCSS(`${awesome.path}components/range/awesome-range.css`);
                         max = '${this.dataset.max}'
                         step = '${this.dataset.step}'
                         value = '${this.dataset.value}'
+                        ${
+                            (this.dataset.disabled==='true')?
+                                'disabled'
+                                    :
+                                ''
+                        }
                     ></input>
                 `;
+
+                this.querySelector('input').addEventListener(
+                    'change',
+                    this.change.bind(this)
+                );
             }
 
             attachedCallback(){
@@ -35,11 +47,22 @@ awesome.requireCSS(`${awesome.path}components/range/awesome-range.css`);
             }
 
             attributeChangedCallback(key,oldValue,newValue){
-                awesome.updateAttributesFromData(
-                    this.querySelector('input'),
-                    key,
-                    newValue
+                this.createdCallback();
+            }
+
+            change(e){
+                e.preventDefault();
+                e.stopPropagation();
+                this.value=e.target.value;
+                const change = new Event(
+                    'change',
+                    {
+                        'bubbles':true,
+                        'cancelable':false
+                    }
                 );
+
+                this.dispatchEvent(change);
             }
         }
 

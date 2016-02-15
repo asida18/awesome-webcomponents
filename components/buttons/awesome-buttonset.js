@@ -7,6 +7,7 @@ awesome.requireCSS(`${awesome.path}components/buttons/awesome-buttonset.css`);
         const defaults={
             index:'',
             count:3,
+            disabled:false,
             'b0':0,
             'b1':1,
             'b2':2
@@ -23,6 +24,18 @@ awesome.requireCSS(`${awesome.path}components/buttons/awesome-buttonset.css`);
                     buttons.push(
                         `<button
                             data-index='${i}'
+                            class='${
+                                (i==this.dataset.index)?
+                                    'active'
+                                        :
+                                    ''
+                            }'
+                            ${
+                                (this.dataset.disabled=='true')?
+                                    'disabled'
+                                        :
+                                    ''
+                            }
                         >${
                             this.dataset[
                                 `b${i}`
@@ -57,7 +70,7 @@ awesome.requireCSS(`${awesome.path}components/buttons/awesome-buttonset.css`);
             }
 
             attributeChangedCallback(key,oldValue,newValue){
-
+                this.createdCallback()
             }
 
             update(e){
