@@ -78,6 +78,7 @@ awesome.requireCSS(`${awesome.path}components/buttons/awesome-buttonset.css`);
             update(e){
                 const active=this.querySelectorAll('.active');
                 active.includes=Array.prototype.includes;
+                this.oldValue=this.value;
 
                 updateActiveButtons :
                 if(active.length>0){
